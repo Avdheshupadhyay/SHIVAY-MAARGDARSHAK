@@ -1,0 +1,81 @@
+.grid {
+    margin: 100px 0 0;
+  }
+  
+  .block {
+    width: 50px;
+   
+    height: 50px;
+    background-color: green;
+   
+    border: 3px solid darkblue;
+  
+    box-shadow: 0 0 10px 5px darkblue;
+    
+  }
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+.message-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background: radial-gradient(circle, #4B0082, #2E1A47, #1C1C3C);
+  overflow: hidden;
+  position: relative;
+}
+
+.message-container h1,
+.message-container p {
+  opacity: 0;
+  transform: translateY(-100px);
+  animation: fadeInSlideDown 2s ease-out forwards;
+}
+
+.message-container h1 {
+  font-size: 2.5rem;
+  color: #00FFFF;
+  animation-delay: 0.2s;
+}
+
+.message-container p {
+  font-size: 1.2rem;
+  color: #FFD700;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  .text {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      outline: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+   
+   
