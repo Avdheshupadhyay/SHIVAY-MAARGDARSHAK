@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Node from './Node/Node';
 import { dijkstra, getNodesInShortestPathOrder } from '../Algorithms/Dijkstra';
-
 import './Finder.css';
 
 export default class PathfindingVisualizer extends Component {
@@ -13,6 +12,8 @@ export default class PathfindingVisualizer extends Component {
       showMessage: true,
       startNode: { row: 4, col: 8 },
       finishNode: { row: 14, col: 21 },
+      numRows: 18, // Default rows
+      numCols: 36, // Default columns
     };
   }
 
@@ -26,95 +27,17 @@ export default class PathfindingVisualizer extends Component {
   }
 
   getInitialGrid() {
-    const { startNode, finishNode } = this.state;
+    const { startNode, finishNode, numRows, numCols } = this.state;
     const grid = [];
-    for (let row = 0; row < 18; row++) {
+    for (let row = 0; row < numRows; row++) {
       const currentRow = [];
-      for (let col = 0; col < 36; col++) {
+      for (let col = 0; col < numCols; col++) {
         currentRow.push(this.createNode(col, row, startNode, finishNode));
       }
       grid.push(currentRow);
     }
     return grid;
   }
-render() {
-  const { grid, mouseIsPressed, showMessage, startNode, finishNode } = this.state;
-
-  if (showMessage) {
-    return (
-      <div className="message-container">
-        <h1>Welcome to the My SHIVAY Māargdarśhak</h1>
-        <p>यात्रा आरम्भे विश्वासः।.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container">
-      <div className="controls">
-        <div>
-          <label>Start Node:</label>
-          <input
-            type="number"
-            name="row"
-            value={startNode.row}
-            onChange={(e) => this.handleInputChange(e, 'startNode')}
-          />
-          <input
-            type="number"
-            name="col"
-            value={startNode.col}
-            onChange={(e) => this.handleInputChange(e, 'startNode')}
-          />
-        </div>
-        <div>
-          <label>Finish Node:</label>
-          <input
-            type="number"
-            name="row"
-            value={finishNode.row}
-            onChange={(e) => this.handleInputChange(e, 'finishNode')}
-          />
-          <input
-            type="number"
-            name="col"
-            value={finishNode.col}
-            onChange={(e) => this.handleInputChange(e, 'finishNode')}
-          />
-        </div>
-      </div>
-      <button className="refresh-button" onClick={() => window.location.reload()}>
-        Refresh
-      </button>
-      <button className="text" onClick={() => this.visualizeDijkstra()}>
-        Visualize Dijkstra's Algorithm
-      </button>
-      <div className="grid">
-        {grid.map((row, rowIdx) => (
-          <div key={rowIdx}>
-            {row.map((node, nodeIdx) => {
-              const { row, col, isFinish, isStart, isWall } = node;
-              return (
-                <Node
-                  key={nodeIdx}
-                  col={col}
-                  isFinish={isFinish}
-                  isStart={isStart}
-                  isWall={isWall}
-                  mouseIsPressed={mouseIsPressed}
-                  onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-                  onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
-                  onMouseUp={() => this.handleMouseUp()}
-                  row={row}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
   createNode(col, row, startNode, finishNode) {
     return {
@@ -147,10 +70,7 @@ render() {
   getNewGridWithWallToggled(grid, row, col) {
     const newGrid = grid.slice();
     const node = newGrid[row][col];
-    const newNode = {
-      ...node,
-      isWall: !node.isWall,
-    };
+    const newNode = { ...node, isWall: !node.isWall };
     newGrid[row][col] = newNode;
     return newGrid;
   }
@@ -192,7 +112,6 @@ render() {
 
   handleInputChange(event, type) {
     const { value, name } = event.target;
-   
     const newPosition = { ...this.state[type], [name]: parseInt(value) };
     this.setState({ [type]: newPosition }, () => {
       const grid = this.getInitialGrid();
@@ -200,14 +119,23 @@ render() {
     });
   }
 
+  handleGridSizeChange(event, type) {
+    this.setState({ [type]: parseInt(event.target.value) });
+  }
+
+  updateGrid() {
+    const grid = this.getInitialGrid();
+    this.setState({ grid });
+  }
+
   render() {
-    const { grid, mouseIsPressed, showMessage, startNode, finishNode } = this.state;
+    const { grid, mouseIsPressed, showMessage, startNode, finishNode, numRows, numCols } = this.state;
 
     if (showMessage) {
       return (
         <div className="message-container">
-          <h1>Welcome to the My SHIVAY Māargdarśhak</h1>
-          <p>यात्रा आरम्भे विश्वासः।.</p>
+          <h1>Welcome to My SHIVAY Māargdarśhak</h1>
+          <p>यात्रा आरम्भे विश्वासः।</p>
         </div>
       );
     }
@@ -217,38 +145,32 @@ render() {
         <div className="controls">
           <div>
             <label>Start Node:</label>
-            <input
-              type="number"
-              name="row"
-              value={startNode.row}
-              onChange={(e) => this.handleInputChange(e, 'startNode')}
-            />
-            <input
-              type="number"
-              name="col"
-              value={startNode.col}
-              onChange={(e) => this.handleInputChange(e, 'startNode')}
-            />
+            <input type="number" name="row" value={startNode.row} onChange={(e) => this.handleInputChange(e, 'startNode')} />
+            <input type="number" name="col" value={startNode.col} onChange={(e) => this.handleInputChange(e, 'startNode')} />
           </div>
           <div>
             <label>Finish Node:</label>
-            <input
-              type="number"
-              name="row"
-              value={finishNode.row}
-              onChange={(e) => this.handleInputChange(e, 'finishNode')}
-            />
-            <input
-              type="number"
-              name="col"
-              value={finishNode.col}
-              onChange={(e) => this.handleInputChange(e, 'finishNode')}
-            />
+            <input type="number" name="row" value={finishNode.row} onChange={(e) => this.handleInputChange(e, 'finishNode')} />
+            <input type="number" name="col" value={finishNode.col} onChange={(e) => this.handleInputChange(e, 'finishNode')} />
+          </div>
+          <div className="grid-size">
+
+            <label>Grid Rows:</label>
+            <input type="number" value={numRows} onChange={(e) => this.handleGridSizeChange(e, 'numRows')} />
+            <label>Grid Columns:</label>
+            <input type="number" value={numCols} onChange={(e) => this.handleGridSizeChange(e, 'numCols')} />
+            <button onClick={() => this.updateGrid()} className="update-grid-button">Update Grid</button>
           </div>
         </div>
+
         <button className="text" onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
+        
+        <button className="refresh-button" onClick={() => window.location.reload()}>
+          Refresh
+        </button>
+
         <div className="grid">
           {grid.map((row, rowIdx) => (
             <div key={rowIdx}>
@@ -272,10 +194,6 @@ render() {
             </div>
           ))}
         </div>
-        <button className="refresh-button" onClick={() => window.location.reload()}>
-          Refresh
-         </button>
-
       </div>
     );
   }
